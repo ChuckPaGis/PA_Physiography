@@ -1,0 +1,207 @@
+﻿<!DOCTYPE HTML> 
+<html>
+<head>
+  <meta charset="utf-8">
+  <!--The viewport meta tag is for iOS devices--> 
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Pennsylvania Physiography</title>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.1/esri/css/main.css">
+  <link rel="stylesheet" href="PhysProv.css" />
+
+  <script src="https://js.arcgis.com/4.1/"></script>
+  <script>
+    var view, map, mapImgLayer, featureLayer;
+    require([
+      "esri/Map", "esri/views/MapView", "esri/layers/MapImageLayer", "esri/layers/FeatureLayer",
+      "esri/widgets/BasemapToggle", "esri/symbols/SimpleFillSymbol", "esri/Graphic",
+      "dojo/domReady!"
+    ], function(
+      Map, MapView, MapImageLayer, FeatureLayer,
+      BasemapToggle,
+      SimpleFillSymbol, Graphic
+    ) { 
+
+      map = new Map({
+        basemap: "topo"
+      });
+
+      view = new MapView({
+        container: "mapDiv",
+        map: map,
+        center: [-77.6, 41.0],
+        zoom: 8
+      });
+
+      mapImgLyr = new MapImageLayer({
+        url: "http://mapmaker2.millersville.edu/ArcGIS/rest/services/PA_PhysProv/MapServer",
+      });
+      map.add(mapImgLyr);
+
+      var toggle = new BasemapToggle({
+        view: view,
+        nextBasemap: "satellite"
+      });
+      toggle.startup();
+
+      var content = "<font face='tahoma' color='red'><b>Physiographic Province:&nbsp;&nbsp;</b></font>{PROVINCE} <br />";
+        content += "<font face='tahoma' color='red'><b>Physiographic Section:&nbsp;&nbsp;</b></font>{SECTION_}";
+      var template = {
+        title: "<b><center>PA Physiography</center></b>",
+        content: content
+      };
+
+      ftrLyr = new FeatureLayer({
+        url: "http://mapmaker2.millersville.edu/ArcGIS/rest/services/PA_PhysProv/MapServer/1",
+        outFields: ["*"],
+        popupTemplate: template
+      });
+      map.add(ftrLyr);
+
+      //Set the overlay symbol:
+      var clickSymbol = new SimpleFillSymbol({
+        color: [0,0,0,0.0],
+        outline: {
+          color: [255,0,0],
+          width: 2
+        }
+      });
+
+	    view.on("click", function(event) {  
+		    view.hitTest(event.screenPoint).then(function(response) {
+			    //clear existing graphics on map
+			    if(response.results.length > 0) {
+				    view.graphics.removeAll();
+			    }
+			    // Add the geometry and symbol to a new graphic
+			    var polygonHighlightGraphic = new Graphic({
+				    geometry: response.results[0].graphic.geometry,
+				    symbol: clickSymbol
+			    });
+			    // Add the graphic to the view's graphics layer
+			    view.graphics.add(polygonHighlightGraphic);
+		    });
+	    });
+	 
+	    // Watch visible property of popup to check whether the popup is visible or not. 
+	    view.popup.watch("visible", function(visible) {
+		    console.log("popup visible: ", visible);
+		    if(!visible) {
+			    view.graphics.removeAll();
+		    }
+	    });
+
+      view.ui.add(toggle, "top-right");
+    });
+
+  </script>
+</head>
+
+<body>
+  <div id="titleBar">Pennsylvania's Physiography</div>
+
+  <div>
+    <ul id="navList">
+      <li id="linkData"><a href="#defs">Data Explanation</a></li>
+      <li id="linkCredits"><a href="#credits">Credits</a></li>
+      <li id="linkBack"><a href="../index.html">PA Maps</a></li>
+    </ul>
+  </div>
+
+  <div class="bar">&nbsp;</div>
+
+  <div id="PhysInstruct">
+    <p>The heavier brown lines, representing Pennsylvania's "physiographic provinces" (see the definition below), and the lighter
+      brown lines representing subdivisions of those provinces, known as "sections," are shown with Pennsylvania's counties.
+      Click on any point in Pennsylvania to see its physiographic section outlined and its province and section identified.</p>
+  </div>
+
+  <div id="mapContainerDiv">
+    <div id="dummy"> </div>
+    <div id="mapDiv" class="map">
+      <div id="basemapToggleDiv"> </div>
+    </div>
+  </div>
+
+  <div class="bar">&nbsp;</div>
+
+  <div id="defs">
+    <h2>Data Explanations</h2>
+    <div id="PhysDefine">
+      <h3 class="links">Definition:</h3>
+      <p id="definition">The physiography of an area is the appearance and characteristics of its physical
+        landscape.  The Physiographic Provinces of Pennsylvania are the six mostly larger areas with consistent
+        general characteristics.  The Provinces can be subdivided again at a larger (more zoomed-in) scale, to
+        distinguish more subtle variations, known as Physiographic Sections.  The Provinces are characterized
+        in the table below using one measurement: elevation.</p>
+    </div>
+
+    <h3 class="links"><br />Comparative Data:</h3>
+    <table id="tableStyle" summary="Representative Data">         
+      <tr>
+        <th class="col16">Provinces</th>
+        <th class="col10">Lowest Elevation</th>
+        <th class="col32">Location of the Lowest Elevation</th>
+        <th class="col10">Highest Elevation</th>
+        <th class="col32">Location of the Highest Elevation</th>
+      </tr>
+      <tr>
+        <th>Central Lowland</th>
+        <td>571 feet</td>
+        <td>Lake Erie shoreline, in Erie County</td>
+        <td>approx. 1,450 feet</td>
+        <td>Near New York border, east of North East, in Erie County</td>
+      </tr>
+      <tr>
+        <th>Appalachian Plateaus</th>
+        <td>665 feet</td>
+        <td>Ohio River shoreline at the Ohio border, in Beaver County</td>
+        <td>3,213 feet</td>
+        <td>Mount Davis, in Somerset County</td>
+      </tr>
+      <tr>
+        <th>Ridge and Valley</th>
+        <td>146 feet</td>
+        <td>Delaware River shoreline just south of Easton, in Northampton County</td>
+        <td>2,757 feet</td>
+        <td>Northeast of Hydnman, in Bedford County</td>
+      </tr>
+      <tr>
+        <th>New England</th>
+        <td>119 feet</td>
+        <td>Delaware River shoreline just south of Riegelsville, in Bucks County</td>
+        <td>1,235 feet</td>
+        <td>Topton Mountain, south of Topton, in Berks County</td>
+      </tr>
+      <tr>
+        <th>Piedmont</th>
+        <td>8 feet</td>
+        <td>Delaware River shoreline between Yardley and Morrisville, in Bucks County</td>
+        <td>1,415 feet</td>
+        <td>Stone Head, just west of Dillsburg, in York County</td>
+      </tr>
+      <tr>
+        <th>Atlantic Coastal Plain</th>
+        <td>0 feet</td>
+        <td>Delaware River shoreline, in Delaware, Philadelphia and southern Bucks Counties</td>
+        <td>200 feet</td>
+        <td>Broad St. and Olney Ave., in Philadelphia</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="bar">&nbsp;</div>
+
+  <div id="credits">
+    <h2>Credits</h2>
+    <p class="links">
+      Data source: &nbsp; &nbsp;<a href="http://www.census.gov">US Census website</a>.<br />
+      US maps source: &nbsp; &nbsp;<a href="http://www.esri.com">Esri, Inc.</a>.<br />
+      PA map source: &nbsp; &nbsp;<a href="http://www.pasda.psu.edu">PA Spatial Data Access</a>.<br />
+      Map and webpage created by: &nbsp; &nbsp;Andrew Bohrer and Kevin Stump, Fall 2011.<br />
+      Modifications by: &nbsp; &nbsp;<a href="mailto:cgeiger@millersville.edu">Dr. Geiger</a>, 2016.
+    </p>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+﻿html, body {
+  width: 96%; 
+  margin: 0 auto;
+  padding: 0;
+  font-family: Times,serif;
+  font-size: 16px;
+  background-color: #a0ffa0;
+}
+
+p {
+  font-size: 16px;
+}
+h2 {
+  margin-left: 10px;
+}
+h3 {
+  margin-left: 20px;
+}
+
+#titleBar {
+  text-align: center;
+  background-color: #006600;
+  height: 96px;
+  line-height: 96px;
+  width: 100%;
+  font-size: 48px;
+  font-style: italic;
+  font-weight: bold;
+  color: #f4db97;
+}
+
+#navList {
+  position: relative;
+  width: 100%;
+  padding-bottom: 16px;
+}
+#navList li {
+  padding: 0;
+  list-style: none;
+  position: absolute;
+  top: 0;
+}
+#navList li, #navList a {
+  height: 32px;
+  display: block;
+}
+#linkLegend {
+  left: 5%;
+  width: 150px;
+}
+#linkData {
+  left: 25%;
+  width: 150px;
+}
+#linkCredits {
+  left: 45%;
+  width: 150px;
+}
+#linkBack {
+  left: 65%;
+  width: 150px;
+}
+
+div.bar {
+  background-color: #800000;
+  height: 4px;
+  width: 100%;
+  margin: 8px 0px 16px 0px;
+}
+#PhysInstruct {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 150%;
+  font-weight: bold;
+  color: #800000;
+}
+
+#mapContainerDiv {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  border: 1px solid #ffffff;
+}
+#dummy {
+  margin-top: 70%; /* ~4:3 aspect ratio */
+}
+#mapDiv {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+#basemapToggleDiv {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 50;
+}
+
+#PhysDefine #definition {
+  display: none;
+}
+#PhysDefine h3 {
+  text-decoration: underline;
+}
+#PhysDefine > h3:hover + p#definition {
+  display: block;
+  margin: 0 30px;
+  color: #000000;
+  font-weight: bold;
+}
+.links {
+  padding: 3px;
+  margin-left: 20px;
+}
+
+#tableStyle {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  border: 1px solid #000000;
+  border-collapse: collapse;
+}
+#tableStyle th {
+  border: 1px solid #000000;
+  text-align: center;
+  padding: 2px;
+  color: #ffffff;
+  background-color: #800000;
+}
+#tableStyle td {
+  border: 1px solid #000000;
+  text-align: center;
+  padding: 2px;
+  background-color: #f4db97;
+}
+#tableStyle th.col16 {
+  width: 16%;
+}
+#tableStyle th.col10 {
+  width: 10%;
+}
+#tableStyle th.col32 {
+  width: 32%;
+}
